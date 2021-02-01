@@ -93,13 +93,15 @@ class EyeDetector:
             cv2.circle(img,(i[0],i[1]),2,(0,0,255),3)
         return img
 
-    def build_glints_detector(params):
+    def default_glint_parameters():
         params = cv2.SimpleBlobDetector_Params()
 
         params.minThreshold = 10
         params.maxThreshold = 255
-
-        blur = cv2.GaussianBlur(im,(5,5),0)
+        
+        params.image_min_threshold = 200;
+        params.image_max_threshold = 255;
+        params.image_threshold_type = cv2.THRESH_BINARY_INV;
 
         params.filterByArea = True
         params.minArea = 1000
@@ -112,30 +114,30 @@ class EyeDetector:
 
         params.filterByInertia = True
         params.minInertiaRatio = 0.001
-
-    def glints_detector(img, glints_detector):
-        img = cv2.imread("/Users/macair/Desktop/VH lab/rat eye2.png", cv2.IMREAD_GRAYSCALE)
-        retval, threshold = cv2.threshold(img, 200, 255, cv2.THRESH_BINARY_INV)
+        
+        return params       
     
+    def built_glints_detector(params)
         ver = (cv2.__version__).split('.')
         if int(ver[0]) < 3:
             glints_detector = cv2.SimpleBlobDetector(params)
         else:
             glints_detector = cv2.SimpleBlobDetector_create(params)
-  
-        glints_detector = cv2.SimpleBlobDetector_create()
+        return glints_detector
+        
+    def apply_glint_detector(img, glints_detector, params):
+        retval, threshold = cv2.threshold(img, params.image_min_threshold, params.image_max_threshold, params.threshold_type);
         keypoints = glints_detector.detect(threshold)
-
-        img_with_keypoints = cv2.drawKeypoints(img, keypoints, np.array([]), (0,0,255), cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-        return img_with_keypoints
+        return keypoints;
 
     def main():
         global needUpdate;
         use_video_capture = false;
         EyeDetector ed;
         needUpdate = true;
+        glint_params = ed.default_glint_parameters();
         pupilDetector = # insert here
-        glintDetector = # insert here
+        glintDetector = ed.build_glint_detector(glint_params);
         
         if use_video_capture:
             cap = cv2.VideoCapture(0)
@@ -147,6 +149,9 @@ class EyeDetector:
             if needUpdate:
                 # re-build the detectors from the parameters
                 # reads the parameters from the window, and builds the detectors
+                # glint_params = (read from the window)
+                glintDetector = ed.build_glint_detector(glint_params);
+                
                 needUpdate = false;
             
             if use_video_capture:
@@ -155,6 +160,9 @@ class EyeDetector:
                 frame = cv2.imread("/Users/macair/Desktop/VH lab/rat eye2.png", cv2.IMREAD_GRAYSCALE);
                 
             pupil_frame = ed.pupil_detector(frame, pupil_detector)
+            keypoints = ed.apply_glint_detector(frame, glints_detector, glint_params);
+            img_with_keypoints = cv2.drawKeypoints(img, keypoints, np.array([]), (0,0,255), cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+
             if pupil_frame is not None:
                 glints_frame = ed.glints_detector(frame, glints_detector)
                 threshold = cv2.getTrackbarPos('threshold', 'image')
