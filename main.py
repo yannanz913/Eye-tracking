@@ -132,6 +132,10 @@ class EyeDetector:
     def main():
         global needUpdate;
         use_video_capture = false;
+        EyeDetector ed;
+        needUpdate = true;
+        pupilDetector = # insert here
+        glintDetector = # insert here
         
         if use_video_capture:
             cap = cv2.VideoCapture(0)
@@ -142,6 +146,7 @@ class EyeDetector:
         while True:
             if needUpdate:
                 # re-build the detectors from the parameters
+                # reads the parameters from the window, and builds the detectors
                 needUpdate = false;
             
             if use_video_capture:
@@ -149,9 +154,9 @@ class EyeDetector:
             else:
                 frame = cv2.imread("/Users/macair/Desktop/VH lab/rat eye2.png", cv2.IMREAD_GRAYSCALE);
                 
-            pupil_frame = detect_pupil(frame, glints_detector)
+            pupil_frame = ed.pupil_detector(frame, pupil_detector)
             if pupil_frame is not None:
-                glints_frame = detect_glints(frame, glints_detector)
+                glints_frame = ed.glints_detector(frame, glints_detector)
                 threshold = cv2.getTrackbarPos('threshold', 'image')
             cv2.imshow('image', pupil_frame)
             if cv2.waitKey(1) & 0xFF == ord('q'):
