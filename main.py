@@ -7,6 +7,9 @@ from PyQt5.QtWidgets import QMainWindow, QWidget, QLabel, QLineEdit, QGridLayout
 from PyQt5.QtWidgets import QPushButton
 from PyQt5.QtCore import QSize
 
+needUpdate = false;
+
+
 class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
@@ -54,14 +57,15 @@ class MainWindow(QWidget):
         self.setGeometry(500, 500, 550, 500)
         self.setWindowTitle('Enter Parameters For Detecting Pupil')    
      
-    def clickMethod(self, checked=True):
+    def clickMethod(self):
+        global needUpdate;
         for field in self.editFields:
             field.clear()
         if self.pybutton.isEnabled():
             EyeDetector.pupil_detector(img, pupil_detector)
-            checked = False
+            needUpdate = True
         else
-            checked = True
+            needUpdate = False
         
 if __name__ == "__main__":
     app = QApplication(sys.argv)
@@ -126,14 +130,28 @@ class EyeDetector:
         return img_with_keypoints
 
     def main():
-        cap = cv2.VideoCapture(0)
+        global needUpdate;
+        use_video_capture = false;
+        
+        if use_video_capture:
+            cap = cv2.VideoCapture(0)
+            
         cv2.namedWindow('image')
         cv2.createTrackbar('threshold', 'image', 0, 255, nothing)
+
         while True:
-            _, frame = cap.read()
-            pupil_frame = detect_pupil(img, glints_detector)
+            if needUpdate:
+                # re-build the detectors from the parameters
+                needUpdate = false;
+            
+            if use_video_capture:
+                _, frame = cap.read()
+            else:
+                frame = cv2.imread("/Users/macair/Desktop/VH lab/rat eye2.png", cv2.IMREAD_GRAYSCALE);
+                
+            pupil_frame = detect_pupil(frame, glints_detector)
             if pupil_frame is not None:
-                glints_frame = detect_glints(img, glints_detector)
+                glints_frame = detect_glints(frame, glints_detector)
                 threshold = cv2.getTrackbarPos('threshold', 'image')
             cv2.imshow('image', pupil_frame)
             if cv2.waitKey(1) & 0xFF == ord('q'):
