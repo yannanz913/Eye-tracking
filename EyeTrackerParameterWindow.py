@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import QMainWindow, QWidget, QLabel, QLineEdit, QGridLayout
 from PyQt5.QtWidgets import QPushButton
 from PyQt5.QtCore import QSize
 
-needUpdate = false;
+clicked = false
 
 class EyeTrackerParameterWindow(QWidget):
     def __init__(self):
@@ -15,12 +15,12 @@ class EyeTrackerParameterWindow(QWidget):
 
         self.initUI()
         
-    def initUI(self):
-        param1 = QLabel('param1')
-        param2 = QLabel('param2')
-        minRadius = QLabel('minRadius')
-        maxRadius = QLabel('maxRadius')
-        Threshold = QLabel('Threshold')
+    def pupil_initUI(self):
+        param1 = QLabel('PupilParam1')
+        param2 = QLabel('PupilParam2')
+        minRadius = QLabel('PupilminRadius')
+        maxRadius = QLabel('PupilmaxRadius')
+        Threshold = QLabel('PupilThreshold')
 
         param1Edit = QLineEdit()
         param2Edit = QLineEdit()
@@ -67,16 +67,27 @@ class EyeTrackerParameterWindow(QWidget):
             clicked = False
 
     def getparams(self):
+	PySide2.QtWidgets.QInputDialog.setInputMode()
         outParams = {'PupilThreshold': 0, \
             'PupilParam1': 0, \
-            'PupilParam2:: 0, \  
-            #and so on...
-        p, okPressed = QInputDialog.getparams(self, #inputs)
-        if okPressed:
-            outParams['PupilThreshold'] = int(self.param1Edit.text);
-            # and so on...
-            #set inputs to be new params
-        return outParams
+            'PupilParam2': 0, \
+	    'PupilminRadius': 0, \
+	    'PupilmaxRadius': 0, \
+	    }
+	p1 = PySide2.QtWidgets.QInputDialog.getInt(self, self.param1Edit(),
+                                   self.ThresholdEdit("PupilThreshold"), 0, -10000, 10000, 1, ok)
+	p2 = PySide2.QtWidgets.QInputDialog.getInt(self, self.param2Edit(),
+                                   self.param1Edit("PupilParam1"), 0, -10000, 10000, 2, ok)
+	p3 = PySide2.QtWidgets.QInputDialog.getInt(self, self.param2Edit(),
+                                   self.param2Edit("PupilParam2"), 0, -10000, 10000, 3, ok)
+	p4 = PySide2.QtWidgets.QInputDialog.getInt(self, self.param2Edit(),
+                                   self.minRadiusEdit("PupilminRadius"), 0, -10000, 10000, 4, ok)
+	p5 = PySide2.QtWidgets.QInputDialog.getInt(self, self.param2Edit(),
+                                   self.maxRadiusEdit("PupilmaxRadius"), 0, -10000, 10000, 5, ok)
+	
+        if ok:
+    	     doubleLabel.setText(QString("$%1").arg(p1))
+		#and so on...
 	
         
 if __name__ == "__main__":
