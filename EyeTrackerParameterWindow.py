@@ -1,4 +1,4 @@
-import numpy as np
+import numpy as n2
 import matplotlib.pyplot as plt
 import cv2
 import sys
@@ -7,13 +7,13 @@ from PyQt5.QtWidgets import QMainWindow, QWidget, QLabel, QLineEdit, QGridLayout
 from PyQt5.QtWidgets import QPushButton
 from PyQt5.QtCore import QSize
 
-clicked = false
-
 class EyeTrackerParameterWindow(QWidget):
     def __init__(self):
         super().__init__()
 
-        self.initUI()
+        self.pupil_initUI()
+
+        self.clicked = False;
         
     def pupil_initUI(self):
         param1 = QLabel('PupilParam1')
@@ -47,9 +47,9 @@ class EyeTrackerParameterWindow(QWidget):
         grid.addWidget(Threshold, 5, 0)
         grid.addWidget(ThresholdEdit, 5, 1)
 
-        pybutton = QPushButton('OK', self)
-        grid.addWidget(pybutton, 6, 1)
-        pybutton.clicked.connect(self.clickMethod)
+        self.pybutton = QPushButton('OK', self)
+        grid.addWidget(self.pybutton, 6, 1)
+        self.pybutton.clicked.connect(self.clickMethod)
         
         self.setLayout(grid)
 
@@ -58,31 +58,32 @@ class EyeTrackerParameterWindow(QWidget):
      
     def clickMethod(self):
         global clicked
-        for field in self.editFields:
-            field.clear()
+        #for field in self.editFields:
+        #    field.clear()
         if self.pybutton.isEnabled():
-            EyeDetector.pupil_detector(img, pupil_detector)
-            clicked = True
-        else
-            clicked = False
+            self.clicked = True
+            p = self.getparams();
+            print(p)
+        else:
+            self.clicked = False
 
     def getparams(self):
-	PySide2.QtWidgets.QInputDialog.setInputMode()
+        QtWidgets.QInputDialog.setInputMode()
         outParams = {'PupilThreshold': 0, \
             'PupilParam1': 0, \
             'PupilParam2': 0, \
 	    'PupilminRadius': 0, \
 	    'PupilmaxRadius': 0, \
 	    }
-	p1 = PySide2.QtWidgets.QInputDialog.getInt(self, self.param1Edit(),
+        p1 = QtWidgets.QInputDialog.getInt(self, self.param1Edit(),
                                    self.ThresholdEdit("PupilThreshold"), 0, -10000, 10000, 1, ok)
-	p2 = PySide2.QtWidgets.QInputDialog.getInt(self, self.param2Edit(),
+        p2 = QtWidgets.QInputDialog.getInt(self, self.param2Edit(),
                                    self.param1Edit("PupilParam1"), 0, -10000, 10000, 2, ok)
-	p3 = PySide2.QtWidgets.QInputDialog.getInt(self, self.param2Edit(),
+        p3 = QtWidgets.QInputDialog.getInt(self, self.param2Edit(),
                                    self.param2Edit("PupilParam2"), 0, -10000, 10000, 3, ok)
-	p4 = PySide2.QtWidgets.QInputDialog.getInt(self, self.param2Edit(),
+        p4 = QtWidgets.QInputDialog.getInt(self, self.param2Edit(),
                                    self.minRadiusEdit("PupilminRadius"), 0, -10000, 10000, 4, ok)
-	p5 = PySide2.QtWidgets.QInputDialog.getInt(self, self.param2Edit(),
+        p5 = QtWidgets.QInputDialog.getInt(self, self.param2Edit(),
                                    self.maxRadiusEdit("PupilmaxRadius"), 0, -10000, 10000, 5, ok)
 	
         if ok:
@@ -92,7 +93,7 @@ class EyeTrackerParameterWindow(QWidget):
         
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    mainWin = MainWindow()
+    mainWin = EyeTrackerParameterWindow()
     mainWin.show()
     sys.exit( app.exec_() )
 

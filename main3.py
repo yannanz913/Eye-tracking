@@ -82,7 +82,7 @@ class EyeDetector:
         cv2.createTrackbar('threshold', 'image', 0, 255, nothing)
 
         while True:
-            if enter_new_params:
+            if MainWindow.clicked:
                 outParams = mw.getparams(self)
                 # re-build the detectors from the parameters
                 pupil_params = {"minThreshold": outParams['PupilMinThreshold'], ...
@@ -94,8 +94,7 @@ class EyeDetector:
                 # reads the parameters from the window, and builds the detectors
                 # glint_params = (read from the window)
                 
-                
-                enter_new_params = false
+                MainWindow.clicked = False
             
             if use_video_capture:
                 _, frame = cap.read()
