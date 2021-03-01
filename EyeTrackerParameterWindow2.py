@@ -1,6 +1,3 @@
-import numpy as n2
-import matplotlib.pyplot as plt
-import cv2
 import sys
 from PyQt5 import QtCore, QtWidgets, QtGui
 from PyQt5.QtWidgets import QMainWindow, QWidget, QLabel, QLineEdit, QGridLayout, QApplication
@@ -11,25 +8,47 @@ class EyeTrackerParameterWindow(QWidget):
     def __init__(self):
         super().__init__()
 
-        self.pupil_initUI()
+        self.initUI()
 
         
-    def pupil_initUI(self):
-        param1 = QLabel('PupilParam1')
-        param2 = QLabel('PupilParam2')
-        minRadius = QLabel('PupilminRadius')
-        maxRadius = QLabel('PupilmaxRadius')
-        Threshold = QLabel('PupilThreshold')
+    def initUI(self):
+        
+        self.setGeometry(500, 500, 550, 500)
+        self.setWindowTitle('Input Parameters')
+
+        label1 = QLabel("Enter parameters for detecting pupil:")
+        param1 = QLabel('Pupil_Param1')
+        param2 = QLabel('Pupil_Param2')
+        minRadius = QLabel('Pupil_minRadius')
+        maxRadius = QLabel('Pupil_maxRadius')
+        Threshold = QLabel('Pupil_Threshold')
+
+        label2 = QLabel("Enter parameters for detecting glints:")
+        minThreshold = QLabel('Glints_minThreshold')
+        maxThreshold = QLabel('Glints_maxThreshold')
+        minArea = QLabel('Glints_minArea')
+        minCircularity = QLabel('Glints_minCircularity')
+        minConvexity = QLabel('Glints_minConvexity')
+        minInertiaRatio = QLabel('Glints_minInertiaRatio')
 
         self.param1Edit = QLineEdit()
         self.param2Edit = QLineEdit()
         self.minRadiusEdit = QLineEdit()
         self.maxRadiusEdit = QLineEdit()
         self.ThresholdEdit = QLineEdit()
+        self.minThresholdEdit = QLineEdit()
+        self.maxThresholdEdit = QLineEdit()
+        self.minAreaEdit = QLineEdit()
+        self.minCircularityEdit = QLineEdit()
+        self.minConvexityEdit = QLineEdit()
+        self.minInertiaRatioEdit = QLineEdit()
         
         grid = QGridLayout()
         grid.setSpacing(10)
 
+        grid.addWidget(label1, 0, 0)
+        grid.addWidget(label2, 0, 2)
+        
         grid.addWidget(param1, 1, 0)
         grid.addWidget(self.param1Edit, 1, 1)
 
@@ -45,22 +64,39 @@ class EyeTrackerParameterWindow(QWidget):
         grid.addWidget(Threshold, 5, 0)
         grid.addWidget(self.ThresholdEdit, 5, 1)
 
-        self.pybutton = QPushButton('OK', self)
-        grid.addWidget(self.pybutton, 6, 1)
-        self.pybutton.clicked.connect(self.getint)
-        
-        self.setLayout(grid)
+        grid.addWidget(minThreshold, 1, 2)
+        grid.addWidget(self.minThresholdEdit, 1, 3)
 
-        self.setGeometry(500, 500, 550, 500)
-        self.setWindowTitle('Enter Parameters For Detecting Pupil')    
+        grid.addWidget(maxThreshold, 2, 2)
+        grid.addWidget(self.maxThresholdEdit, 2, 3)
+
+        grid.addWidget(minArea, 3, 2)
+        grid.addWidget(self.minAreaEdit, 3, 3)
+
+        grid.addWidget(minCircularity, 4, 2)
+        grid.addWidget(self.minCircularityEdit, 4, 3)
+
+        grid.addWidget(minConvexity, 5, 2)
+        grid.addWidget(self.minConvexityEdit, 5, 3)
+
+        grid.addWidget(minInertiaRatio, 6, 2)
+        grid.addWidget(self.minInertiaRatioEdit, 6, 3)
+
+        
+        self.pybutton = QPushButton('OK', self)
+        grid.addWidget(self.pybutton, 7, 3)
+        self.pybutton.clicked.connect(self.getint)        
+
+        self.setLayout(grid)
+        
 
     def getint(self):
         pupilParams = {
-           "PupilParam1": 0,
-           "PupilParam2": 0,
-           "minRadiusEdit": 0,
-           "maxRadiusEdit": 0,
-           "Threshold": 0
+           "Pupil_Param1": 0,
+           "Pupil_Param2": 0,
+           "Pupil_minRadiusEdit": 0,
+           "Pupil_maxRadiusEdit": 0,
+           "Pupil_Threshold": 0
         }
         glintParams = {
            "Glint1": 0,
