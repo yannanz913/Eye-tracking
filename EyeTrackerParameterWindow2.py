@@ -3,6 +3,10 @@ from PyQt5 import QtCore, QtWidgets, QtGui
 from PyQt5.QtWidgets import QMainWindow, QWidget, QLabel, QLineEdit, QGridLayout, QApplication
 from PyQt5.QtWidgets import QPushButton
 from PyQt5.QtCore import QSize
+from PyQt5.QtGui import QIcon, QPixmap
+import numpy as np
+import matplotlib.pyplot as plt
+import cv2
 
 class EyeTrackerParameterWindow(QWidget):
     def __init__(self):
@@ -85,41 +89,40 @@ class EyeTrackerParameterWindow(QWidget):
         
         self.pybutton = QPushButton('OK', self)
         grid.addWidget(self.pybutton, 7, 3)
-        self.pybutton.clicked.connect(self.getint)        
+        self.pybutton.clicked.connect(self.clickMethod_ok)        
 
         self.setLayout(grid)
         
 
-    def getint(self):
-        pupilParams = {
-           "Pupil_Param1": 0,
-           "Pupil_Param2": 0,
-           "Pupil_minRadiusEdit": 0,
-           "Pupil_maxRadiusEdit": 0,
-           "Pupil_Threshold": 0
-        }
-        glintParams = {
-           "Glint1": 0,
-           "Glint2": 0
-        }
+    def clickMethod_ok(self,type):
+        type.cv2.HoughCircles()
 
-        threshold_string = self.ThresholdEdit.text();
-        pupilParams["Threshold"] = int(threshold_string)
-        print(pupilParams)
-        #param1, done1 = QtWidgets.QInputDialog.getInt(self, 'Enter Parameters For Detecting Pupil', 'Pupilparam1')
-        #param2, done2 = QtWidgets.QInputDialog.getInt(self, 'Enter Parameters For Detecting Pupil', 'Pupilparam2')
-        #minRadius, done3 = QtWidgets.QInputDialog.getInt(self, 'Enter Parameters For Detecting Pupil', 'PupilminRadius')
-        #maxRadius, done4 = QtWidgets.QInputDialog.getInt(self, 'Enter Parameters For Detecting Pupil', 'PupilmaxRadius')
-        #Threshold, done5 = QtWidgets.QInputDialog.getInt(self, 'Enter Parameters For Detecting Pupil', 'PupilThreshold')
-        #if done1 and done2 and done3 and done4 and done5 : 
-            # set parameters to be those in pupil detection function
-        #    a=1
-        return pupilParams;
-
-            
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     mainWin = EyeTrackerParameterWindow()
     mainWin.show()
-    sys.exit( app.exec_() )
+    sys.exit( app.exec_() )        
+
+    
+class EyeDetector:
+
+    def pupil_detector(self):
+        img = cv2.imread("/Users/elainezhu/Desktop/VH lab/rat eye.png")
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        cimg = img.copy()
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        img = cv2.medianBlur(img, 5)
+        circles = cv2.HoughCircles(img,cv2.HOUGH_GRADIENT,1,50,
+                                param1=50,param2=50,minRadius=0,maxRadius=0)
+        pupil_detector = circles
+        circles = np.uint16(np.around(circles))
+        for i in circles[0,:]:
+            cv2.circle(img,(i[0],i[1]),i[2],(0,255,0),2)
+            cv2.circle(img,(i[0],i[1]),2,(0,0,255),3)
+
+        cv2.imshow('detected pupil',img)
+
+        cv2.waitKey(0)
+
+        return img
 
