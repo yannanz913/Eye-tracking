@@ -95,7 +95,29 @@ class EyeTrackerParameterWindow(QWidget):
         
 
     def clickMethod_ok(self,type):
-        type.cv2.HoughCircles()
+        global clicked
+        #for field in self.editFields:
+        #    field.clear()
+        if self.pybutton.isEnabled():
+            self.clicked = True
+            p = self.getparams();
+            print(p)
+        else:
+            self.clicked = False
+
+    def GetParams(self):
+        # restore previous
+
+
+    def SetPupilParams(pupil_params)
+        # Set the text boxes to have the parameters specified
+
+    def SetGlintParams(glint_params)
+        # Set the text boxes to have the parameters specified
+
+    
+
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
