@@ -2,6 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import cv2
 
+
+class EyeDetector:
 def build_pupil_detector(circles):
     circles = cv2.HoughCircles(img,cv2.HOUGH_GRADIENT,1,50,
                                 param1=50,param2=50,minRadius=0,maxRadius=0)

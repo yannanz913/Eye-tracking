@@ -8,16 +8,13 @@ from PyQt5.QtWidgets import QPushButton
 from PyQt5.QtCore import QSize
 
 from EyeTrackerParameterWindow import EyeTrackerParameterWindow
-
 from EyeDetector import EyeDetector
 
- # Step 1: Setup the windows and detectors and variables
+ # Step 1: Setup the Parameter Window and its default properties
 
 global enter_new_params
-use_video_capture = false
-EyeDetector ed
-MainWindow mw
-enter_new_params = true
+use_video_capture = False
+enter_new_params = True
 
 glint_params = ed.default_glint_parameters()
 pupil_params = ed.default_pupil_parameters()
@@ -29,6 +26,8 @@ paramWindow = EyeTrackerParameterWindow()
 paramWindow.SetPupilParams(pupil_params);
 paramWindow.SetGlintParams(glint_params)
 paramWindow.show()
+
+ # Step 2: Setup the default detectors and windows
 
 if use_video_capture:
     cap = cv2.VideoCapture(0)
