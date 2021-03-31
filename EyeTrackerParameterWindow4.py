@@ -18,7 +18,9 @@ class EyeTrackerParameterWindow(QWidget):
         self.initUI()
         self.UpdateClicked = False;
         self.PupilParams = { "Pupil_Param1": 0, "Pupil_Param2": 0, "Pupil_minRadius":0, "Pupil_maxRadius": 1, "Pupil_Threshold": 1};
+        self.GlintsParams = { "Glints_minThreshold": 0, "Glints_maxThreshold": 0, "Glints_minArea":0, "Glints_minCircularity": 1, "Glints_minConvexity": 1, "Glints_minInertiaRatio": 1}
         self.SetPupilParams(self.PupilParams);
+        self.SetGlintsParams(self.GlintsParams);
 
 
     def initUI(self):
@@ -114,16 +116,32 @@ class EyeTrackerParameterWindow(QWidget):
         pupilParams = {
            "Pupil_Param1": 0,
            "Pupil_Param2": 0,
-           "Pupil_minRadiusEdit": 0,
-           "Pupil_maxRadiusEdit": 0,
+           "Pupil_minRadius": 0,
+           "Pupil_maxRadius": 0,
            "Pupil_Threshold": 0
         }
         pupilParams['Pupil_Param1'] = int(self.param1Edit.text());
         pupilParams['Pupil_Param2'] = int(self.param2Edit.text());
-        pupilParams['Pupil_minRadiusEdit'] = int(self.minRadiusEdit.text());
-        pupilParams['Pupil_maxRadiusEdit'] = int(self.maxRadiusEdit.text());
+        pupilParams['Pupil_minRadius'] = int(self.minRadiusEdit.text());
+        pupilParams['Pupil_maxRadius'] = int(self.maxRadiusEdit.text());
         pupilParams['Pupil_Threshold'] = int(self.ThresholdEdit.text());
-        return(pupilParams)
+    
+        glintsParams = {
+           "Glints_minThreshold": 0,
+           "Glints_maxThreshold": 0,
+           "Glints_minArea": 0,
+           "Glints_minCircularity": 0,
+           "Glints_minConvexity": 0,
+           "Glints_minInertiaRatio": 0
+        }
+        glintsParams['Glints_minThreshold'] = int(self.minThresholdEdit.text());
+        glintsParams['Glints_maxThreshold'] = int(self.maxThresholdEdit.text());
+        glintsParams['Glints_minArea'] = int(self.minAreaEdit.text());
+        glintsParams['Glints_minCircularity'] = int(self.minCircularityEdit.text());
+        glintsParams['Glints_minConvexity'] = int(self.minConvexityEdit.text());
+        glintsParams['Glints_minInertiaRatio'] = int(self.minInertiaRatioEdit.text());
+        
+        return(pupilParams,glintsParams)
 
     def SetPupilParams(self, pupilParams):
         self.PupilParams['Pupil_Param1'] = pupilParams['Pupil_Param1'];
@@ -132,13 +150,29 @@ class EyeTrackerParameterWindow(QWidget):
         self.PupilParams['Pupil_maxRadius'] = pupilParams['Pupil_maxRadius'];
         self.PupilParams['Pupil_Threshold'] = pupilParams['Pupil_Threshold'];
 
+        
         # Set the text boxes to have the parameters specified
         self.param1Edit.setText(str(self.PupilParams['Pupil_Param1']));
         self.param2Edit.setText(str(self.PupilParams['Pupil_Param2']));
         self.minRadiusEdit.setText(str(self.PupilParams['Pupil_minRadius']));
         self.maxRadiusEdit.setText(str(self.PupilParams['Pupil_maxRadius']));
         self.ThresholdEdit.setText(str(self.PupilParams['Pupil_Threshold']));
-    
+
+
+    def SetGlintsParams(self, glintsParams):
+        self.GlintsParams['Glints_minThreshold'] = glintsParams['Glints_minThreshold'];
+        self.GlintsParams['Glints_maxThreshold'] = glintsParams['Glints_maxThreshold'];
+        self.GlintsParams['Glints_minArea'] = glintsParams['Glints_minArea'];
+        self.GlintsParams['Glints_minCircularity'] = glintsParams['Glints_minCircularity'];
+        self.GlintsParams['Glints_minConvexity'] = glintsParams['Glints_minConvexity'];
+        self.GlintsParams['Glints_minInertiaRatio'] = glintsParams['Glints_minInertiaRatio'];
+
+        self.minThresholdEdit.setText(str(self.GlintsParams['Glints_minThreshold']));
+        self.maxThresholdEdit.setText(str(self.GlintsParams['Glints_maxThreshold']));
+        self.minAreaEdit.setText(str(self.GlintsParams['Glints_minArea']));
+        self.minCircularityEdit.setText(str(self.GlintsParams['Glints_minCircularity']));
+        self.minConvexityEdit.setText(str(self.GlintsParams['Glints_minConvexity']));
+        self.minInertiaRatioEdit.setText(str(self.GlintsParams['Glints_minInertiaRatio']));        
     
 if __name__ == "__main__":
     app = QApplication(sys.argv)
