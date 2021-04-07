@@ -19,7 +19,7 @@ class EyeTrackerImageWindow(QDialog):
         self.setGeometry(self.left, self.top, self.width, self.height)
         vbox = QVBoxLayout()
         labelImage = QLabel(self)
-        pixmap = QPixmap("/Users/elainezhu/Desktop/VH lab/rat eye.png")
+        pixmap = QPixmap("rat eye.png")
         labelImage.setPixmap(pixmap)
         vbox.addWidget(labelImage)
         self.setLayout(vbox)
@@ -36,7 +36,7 @@ class EyeDetector:
                                     param1=pupilParams['Pupil_Param1'], param2=pupilParams['Pupil_Param2'], minRadius=pupilParams['Pupil_minRadius'], maxRadius=pupilParams['Pupil_maxRadius'])
 
     def pupil_detector(img, pupil_detector):
-        img = cv2.imread("/Users/macair/Desktop/VH lab/rat eye.png")
+        img = cv2.imread("rat eye.png")
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         cimg = img.copy()
         img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
