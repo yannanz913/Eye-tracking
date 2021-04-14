@@ -103,6 +103,7 @@ class EyeTrackerParameterWindow(QWidget):
         self.pybutton2.clicked.connect(self.clickMethod_ShowImage)
         
         self.setLayout(grid)
+        self.show()
         
 
     def clickMethod_ok(self,type):
