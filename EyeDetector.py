@@ -14,12 +14,18 @@ class EyeDetector:
 
     def apply_pupil_detector(self, img):
         #img_thresholded =  cv2.threshold(img, pupilParams['threshold?? ?'])
+        #create a trackbar instead of including img_thresholded?
         self.pupil_circles = cv2.HoughCircles(img_thresholded,cv2.HOUGH_GRADIENT,1,50,
              param1=self.pupilParams['Pupil_Param1'], param2=self.pupilParams['Pupil_Param2'], 
              minRadius=self.pupilParams['Pupil_minRadius'], maxRadius=self.pupilParams['Pupil_maxRadius'])
 
     def draw_pupil(self, img):
         # draw the pupil on the img
+        circles = np.uint16(np.around(circles))
+        for i in circles[0,:]:
+        cv2.circle(img,(i[0],i[1]),i[2],(0,255,0),2)
+        cv2.circle(img,(i[0],i[1]),2,(0,0,255),3)
+        #need to be returned using cv2.imshow
         return img;
 
     def build_glints_detector(self, glintsParams):
