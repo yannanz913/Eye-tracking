@@ -18,10 +18,14 @@ class EyeTrackerImageWindow(QDialog):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         vbox = QVBoxLayout()
-        labelImage = QLabel(self)
+        self.labelImage = QLabel(self)
         pixmap = QPixmap("rat eye.png")
-        labelImage.setPixmap(pixmap)
+        self.labelImage.setPixmap(pixmap)
         vbox.addWidget(labelImage)
         self.setLayout(vbox)
         self.show()
 
+   def displayImage(self, img)
+	# implement
+        # self.labelimage = QPixmap(img);
+        # self.show()

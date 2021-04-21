@@ -5,12 +5,14 @@ from PyQt5.QtGui import QPixmap
 import EyeDetector
 import EyeTrackerImageWindow
 import EyeTrackerParameterWindow
+import EyeTrackerImageLoader
 
 
 App = QApplication(sys.argv)
 leftview_window = EyeTrackerImageWindow.EyeTrackerImageWindow()
 rightview_window = EyeTrackerImageWindow.EyeTrackerImageWindow()
 parameter_window = EyeTrackerParameterWindow.EyeTrackerParameterWindow()
+imageLoader = EyeTrackerImageLoader.EyeTrackerImageLoader(0); # 0 means load files
 sys.exit(App.exec())
 
 

@@ -56,6 +56,10 @@ while True:
             
   # Step 2.2: get the video frame
   # grab from the video or read from disk
+  img1 = img_loader.getImage(1);
+  img2 = img_loader.getImage(2);
+  
+  
   if use_video_capture:
       _, frame = cap.read()
   else:
