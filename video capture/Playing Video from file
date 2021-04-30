@@ -11,12 +11,18 @@ while(cap.isOpened()):
 cap.release()
 cv2.destroyAllWindows()
 
-#
+# modified version1
+import numpy as np
 import cv2
 import matplotlib.pyplot as plt
-img = cv2.imread('Qtcam-21_02_17:12_35_53.avi',0)
-plt.imshow(img, cmap='gray')
+cap = cv2.VideoCapture('Qtcam-21_02_17:12_35_53.avi')
+while(cap.isOpened()):
+    ret, frame = cap.read()
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+    plt.imshow('Qtcam-21_02_17:12_35_53.avi')
 plt.show()
+cap.release()
 
 # https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_gui/py_video_display/py_video_display.html
 
