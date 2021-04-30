@@ -38,3 +38,19 @@ while(True):
     cv2.imshow('left eye',frame)
 cap.release()
 cv2.destroyAllWindows()
+
+# modified version2:
+import cv2
+import numpy as np
+cap = cv2.VideoCapture(2)
+while(True):
+    grabbed, frame=video.read()
+    frame=cv2.resize(frame,(1020,720))
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+    usb_camera=cv2.imshow('left eye',frame)
+cap.release()
+cv2.destroyAllWindows()
+
+
+
