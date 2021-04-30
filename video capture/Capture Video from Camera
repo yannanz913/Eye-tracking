@@ -24,3 +24,17 @@ while(True):
 # When everything done, release the capture
 cap.release()
 cv2.destroyAllWindows()
+
+
+# modified version1:
+
+import numpy as np
+import cv2
+cap = cv2.VideoCapture(10)
+while(True):
+    _, frame = cap.read()
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+    cv2.imshow('left eye',frame)
+cap.release()
+cv2.destroyAllWindows()
