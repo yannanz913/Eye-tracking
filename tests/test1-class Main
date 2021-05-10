@@ -1,0 +1,22 @@
+import numpy as np
+import cv2
+from test1.EyeDetector import apply_pupil_detector
+from test1.EyeDetector import draw_pupil
+
+cap = cv2.VideoCapture("/Users/elainezhu/Desktop/Qtcam-21_02_17_12_35_53.avi")
+while (cap.isOpened()):
+    ret, frame = cap.read()
+    if ret:
+        cv2.imshow("recorded video", frame)
+        pupilDetector = apply_pupil_detector(frame)
+        pupilTracking = draw_pupil(frame)
+    else:
+        print("successful")
+        break
+    # gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+        # cv2.imshow('Qtcam-21_02_17:12_35_53.avi',gray)
+cap.release()
+cv2.destroyAllWindows()
+
