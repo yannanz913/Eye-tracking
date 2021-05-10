@@ -1,15 +1,16 @@
 import numpy as np
 import cv2
-from test1.EyeDetector import apply_pupil_detector
-from test1.EyeDetector import draw_pupil
+import EyeDetector
 
-cap = cv2.VideoCapture("/Users/elainezhu/Desktop/Qtcam-21_02_17_12_35_53.avi")
+ed_left = EyeDetector.EyeDetector()
+
+cap = cv2.VideoCapture("../videos/Qtcam-21_02_17_12_35_53.avi")
 while (cap.isOpened()):
     ret, frame = cap.read()
     if ret:
         cv2.imshow("recorded video", frame)
-        pupilDetector = apply_pupil_detector(frame)
-        pupilTracking = draw_pupil(frame)
+        ed_left.apply_pupil_detector(frame)
+        ed_left.draw_pupil(frame)
     else:
         print("successful")
         break
