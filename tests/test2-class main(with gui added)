@@ -1,0 +1,56 @@
+import numpy as np
+import cv2
+import sys
+from PyQt5 import QtCore, QtWidgets, QtGui
+from PyQt5.QtWidgets import QMainWindow, QWidget, QLabel, QLineEdit, QGridLayout, QApplication
+from PyQt5.QtWidgets import QPushButton
+from PyQt5.QtCore import QSize, QSettings, QPoint
+from PyQt5.QtGui import QIcon, QPixmap
+import EyeDetector
+import EyeTrackerParameterWindow
+
+global enter_new_params
+enter_new_params = True
+
+ed_left = EyeDetector.EyeDetector()
+App = QApplication(sys.argv)
+paramWindow = EyeTrackerParameterWindow.EyeTrackerParameterWindow()
+
+pupil_params = paramWindow.PupilParams
+glint_params = paramWindow.GlintsParams
+
+paramWindow.SetPupilParams(pupil_params)
+paramWindow.SetGlintsParams(glint_params)
+paramWindow.show()
+
+cap = cv2.VideoCapture("/Users/elainezhu/Desktop/Qtcam-21_02_17_12_35_53.avi")
+while (cap.isOpened()):
+    ret, frame = cap.read()
+    if ret:
+        cv2.imshow("recorded video", frame)
+        ed_left.apply_pupil_detector(frame)
+        ed_left.draw_pupil(frame)
+        ed_left.apply_glints_detector(frame)
+        ed_left.draw_glintpoints(frame)
+
+        if paramWindow.clickMethod_ok(type):
+            outParams = paramWindow.GetParams()
+            # re-build the detectors from the parameters
+            pupil_params = {"Pupil_Param1": outParams, "Pupil_Param2": outParams, "Pupil_minRadius": outParams, "Pupil_maxRadius": outParams,
+                            "Pupil_Threshold": outParams}
+            glint_params = {"Glints_minThreshold": outParams, "Glints_maxThreshold": outParams, "Glints_minArea": outParams,
+             "Glints_minCircularity": outParams, "Glints_minConvexity": outParams, "Glints_minInertiaRatio": outParams}
+            rebuildpupilDetector = ed_left.build_pupil_detector(pupil_params)
+            rebuildglintDetector = ed_left.build_glint_detector(glint_params)
+            paramWindow.clicked = False
+            enter_new_params = False
+            
+    else:
+        print("successful")
+        break
+    # gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+        # cv2.imshow('Qtcam-21_02_17:12_35_53.avi',gray)
+cap.release()
+cv2.destroyAllWindows()
