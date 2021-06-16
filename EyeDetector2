@@ -5,7 +5,6 @@ import EyeTrackerParameterWindow
 from PyQt5.QtWidgets import QMainWindow, QWidget, QLabel, QLineEdit, QGridLayout, QApplication
 
 App = QApplication(sys.argv)
-paramWindow = EyeTrackerParameterWindow.EyeTrackerParameterWindow()
 
 class EyeDetector:
 
@@ -15,8 +14,8 @@ class EyeDetector:
     glintpoints = []
 
 
-    def build_pupil_detector(self):
-        self.pupilParams = paramWindow.getparams()[0]
+    def build_pupil_detector(self, pupilParams):
+        self.pupilParams = pupilParams
 
     def apply_pupil_detector(self,img):
         self.build_pupil_detector()

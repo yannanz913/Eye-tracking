@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import QMainWindow, QWidget, QLabel, QLineEdit, QGridLayout
 from PyQt5.QtWidgets import QPushButton
 from PyQt5.QtCore import QSize, QSettings, QPoint
 from PyQt5.QtGui import QIcon, QPixmap
-import EyeDetector
+import EyeDetector2
 import EyeTrackerParameterWindow
 from subprocess import Popen, PIPE
 
@@ -35,13 +35,14 @@ while (cap.isOpened()):
         ed_left.draw_glintpoints(frame)
 
         if paramWindow.clickMethod_ok(type):
+            print("Attempting to modify parameters")
             outParams = paramWindow.getParams()
             # re-build the detectors from the parameters
             pupil_params = {"Pupil_Param1": outParams.pupilParams[0], "Pupil_Param2": outParams.pupilParams[1], "Pupil_minRadius": outParams.pupilParams[2], "Pupil_maxRadius": outParams.pupilParams[3],
                             "Pupil_Threshold": outParams.pupilParams[4]}
             glint_params = {"Glints_minThreshold": outParams.glintsParams[0], "Glints_maxThreshold": outParams.glintsParams[1], "Glints_minArea": outParams.glintsParams[2],
              "Glints_minCircularity": outParams.glintsParams[3], "Glints_minConvexity": outParams.glintsParams[4], "Glints_minInertiaRatio": outParams.glintsParams[5]}
-            rebuildpupilDetector = ed_left.build_pupil_detector(pupil_params)
+            ed_left.build_pupil_detector(pupil_params)
             rebuildglintDetector = ed_left.build_glints_detector(glint_params)
             paramWindow.clicked = False
             enter_new_params = False
