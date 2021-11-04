@@ -1,27 +1,20 @@
 import numpy as np
 import cv2
-cap = cv2.VideoCapture('Qtcam-21_02_17:12_35_53.avi')
+cap = cv2.VideoCapture("/Users/elainezhu/Desktop/still image video(test).mp4")
 while(cap.isOpened()):
     ret, frame = cap.read()
+    frame = frame[250:700, 700:1200]
+    if ret:
+        cv2.imshow("recorded video",frame)
+    else:
+        print("successful")
+        break
+    #gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
-    cv2.imshow('Qtcam-21_02_17:12_35_53.avi',gray)
+    #cv2.imshow('Qtcam-21_02_17:12_35_53.avi',gray)
 cap.release()
 cv2.destroyAllWindows()
-
-# modified version1
-import numpy as np
-import cv2
-import matplotlib.pyplot as plt
-cap = cv2.VideoCapture('Qtcam-21_02_17:12_35_53.avi')
-while(cap.isOpened()):
-    ret, frame = cap.read()
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
-    plt.imshow('Qtcam-21_02_17:12_35_53.avi')
-plt.show()
-cap.release()
 
 # https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_gui/py_video_display/py_video_display.html
 
