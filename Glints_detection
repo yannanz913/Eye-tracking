@@ -1,0 +1,46 @@
+import cv2
+import numpy as np
+
+img = cv2.imread("/Users/elainezhu/Desktop/Qtcam_21_06_03_15_32_45-1.jpg", cv2.IMREAD_GRAYSCALE)
+# imgf = np.zeros_like(img)
+# imgt = img < 100
+# imgf[imgt] = img[imgt]
+retval, threshold = cv2.threshold(img, 200, 255, cv2.THRESH_BINARY_INV)
+
+params = cv2.SimpleBlobDetector_Params()
+
+params.minThreshold = 10
+params.maxThreshold = 255
+
+blur = cv2.GaussianBlur(img, (5, 5), 0)
+
+params.filterByArea = True
+params.minArea = 50000
+
+params.filterByCircularity = True
+params.minCircularity = 0.001
+
+params.filterByConvexity = True
+params.minConvexity = 0.001
+
+params.filterByInertia = True
+params.minInertiaRatio = 0.001
+
+ver = (cv2.__version__).split('.')
+if int(ver[0]) < 3:
+    detector = cv2.SimpleBlobDetector(params)
+else:
+    detector = cv2.SimpleBlobDetector_create(params)
+
+detector = cv2.SimpleBlobDetector_create()
+keypoints = detector.detect(threshold)
+for keyPoint in keypoints:
+    x = keyPoint.pt[0]
+    y = keyPoint.pt[1]
+    print(x,y)
+
+im_with_keypoints = cv2.drawKeypoints(img, keypoints, np.array([]), (0, 0, 255),
+                                      cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+cv2.imshow("Eye-tracking", im_with_keypoints)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
