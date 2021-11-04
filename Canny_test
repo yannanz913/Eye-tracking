@@ -1,0 +1,21 @@
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+img = cv2.imread("/Users/elainezhu/Desktop/Screen Shot 2021-07-09 at 9.26.59 AM.png")
+# y=220
+# x=650
+# h=500
+# w=720
+# img = img[y:y+h, x:x+w]
+img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+imgf = np.zeros_like(img)
+imgt = img < 100
+imgf[imgt] = img[imgt]
+cv2.imshow("imgf", imgf)
+plt.imshow(imgf, cmap="gray")
+# plt.show()
+edges = cv2.Canny(imgf, threshold1=8, threshold2=16)
+cv2.imshow("edges", edges)
+
+cv2.waitKey(0)
