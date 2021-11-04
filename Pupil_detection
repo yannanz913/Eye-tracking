@@ -1,0 +1,38 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import cv2
+
+img = cv2.imread("/Users/elainezhu/Desktop/Qtcam_21_06_03_15_32_45-1.jpg")
+y=130
+x=200
+h=140
+w=220
+crop_img = img[y:y+h, x:x+w]
+# lab = cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
+#
+# l, a, b = cv2.split(lab)
+#
+# clahe = cv2.createCLAHE(clipLimit=3.0, tileGridSize=(8,8))
+# cl = clahe.apply(l)
+#
+# limg = cv2.merge((cl,a,b))
+#
+# final = cv2.cvtColor(limg, cv2.COLOR_LAB2BGR)
+#
+# cimg = final.copy()
+# final = cv2.cvtColor(final, cv2.COLOR_BGR2GRAY)
+# final = cv2.medianBlur(final, 5)
+img = cv2.cvtColor(crop_img, cv2.COLOR_BGR2GRAY)
+img = cv2.medianBlur(img, 5)
+circles = cv2.HoughCircles(img,cv2.HOUGH_GRADIENT,1,50,
+                            param1=30,param2=50,minRadius=30,maxRadius=72)
+
+circles = np.uint16(np.around(circles))
+for i in circles[0,:]:
+    cv2.circle(img,(i[0],i[1]),i[2],(0,255,0),2)
+    cv2.circle(img,(i[0],i[1]),2,(0,0,255),3)
+
+cv2.imshow("cropped", img)
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
