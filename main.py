@@ -1,176 +1,75 @@
 import numpy as np
-import matplotlib.pyplot as plt
 import cv2
 import sys
-from PyQt5 import QtCore, QtWidgets
+from PyQt5 import QtCore, QtWidgets, QtGui
 from PyQt5.QtWidgets import QMainWindow, QWidget, QLabel, QLineEdit, QGridLayout, QApplication
 from PyQt5.QtWidgets import QPushButton
-from PyQt5.QtCore import QSize
+from PyQt5.QtCore import QSize, QSettings, QPoint
+from PyQt5.QtGui import QIcon, QPixmap
+import EyeDetector
+import EyeTrackerParameterWindow
+from subprocess import Popen, PIPE
 
-needUpdate = false;
+global enter_new_params
+enter_new_params = True
 
+ed_left = EyeDetector.EyeDetector()
+App = QApplication(sys.argv)
+paramWindow = EyeTrackerParameterWindow.EyeTrackerParameterWindow()
 
-class MainWindow(QWidget):
-    def __init__(self):
-        super().__init__()
+pupil_params = paramWindow.PupilParams
+glint_params = paramWindow.GlintsParams
 
-        self.initUI()
-        
-    def initUI(self):
-        param1 = QLabel('param1')
-        param2 = QLabel('param2')
-        minRadius = QLabel('minRadius')
-        maxRadius = QLabel('maxRadius')
-        Threshold = QLabel('Threshold')
+paramWindow.SetPupilParams(pupil_params)
+paramWindow.SetGlintsParams(glint_params)
+paramWindow.show()
 
-        param1Edit = QLineEdit()
-        param2Edit = QLineEdit()
-        minRadiusEdit = QLineEdit()
-        maxRadiusEdit = QLineEdit()
-        ThresholdEdit = QLineEdit()
-        editFields = [param1Edit, param2Edit, minRadiusEdit, maxRadiusEdit, ThresholdEdit]
-        
-        grid = QGridLayout()
-        grid.setSpacing(10)
+pupil_paramsW,glint_paramsW = paramWindow.getparams()
+print (pupil_paramsW)
+# re-build the detectors from the parameters
+rebuildpupilDetector = ed_left.build_pupil_detector(pupil_paramsW)
+rebuildglintDetector = ed_left.build_glints_detector(glint_paramsW)
 
-        grid.addWidget(param1, 1, 0)
-        grid.addWidget(param1Edit, 1, 1)
+cap = cv2.VideoCapture("/Users/elainezhu/Desktop/output0708.avi")
+while (cap.isOpened()):
+    ret, frame = cap.read()
+    # frame = frame[220:720, 650:1370]
+    frame = cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
+    if ret:
+        cv2.imshow("recorded video", frame)
+        ed_left.apply_pupil_detector(frame)
+        ed_left.apply_glints_detector(frame)
+        frame=ed_left.draw_pupil(frame)
+        frame=ed_left.draw_glintpoints(frame)
+        print("about to show recording video")
+        cv2.imshow("recorded video", frame)
 
-        grid.addWidget(param2, 2, 0)
-        grid.addWidget(param2Edit, 2, 1)
+        if paramWindow.clickMethod_ok(type):
+            pupil_paramsW, glint_paramsW = paramWindow.getparams()
+            # re-build the detectors from the parameters
+            rebuildpupilDetector = ed_left.build_pupil_detector(pupil_paramsW)
+            rebuildglintDetector = ed_left.build_glints_detector(glint_paramsW)
+            paramWindow.clicked = False
+            enter_new_params = False
+    else:
+        print("successful")
+        break
+    # gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+        # cv2.imshow('Qtcam-21_02_17:12_35_53.avi',gray)
 
-        grid.addWidget(minRadius, 3, 0)
-        grid.addWidget(minRadiusEdit, 3, 1)
+    # p = Popen(['main.py', 'arg1'], stdin=PIPE, stdout=PIPE, stderr=PIPE)
+    # output, err = p.communicate(b"input data that is passed to subprocess' stdin")
+    # rc = p.returncode
 
-        grid.addWidget(maxRadius, 4, 0)
-        grid.addWidget(maxRadiusEdit, 4, 1)
+# def main():
+#     f= open("data stored.txt","w+")
+#     for i in range(100):
+#         f.write("This is line %d\r\n" % (i+1))
+#     f.close()
+# if __name__== "__main__":
+#   main()
 
-        grid.addWidget(Threshold, 5, 0)
-        grid.addWidget(ThresholdEdit, 5, 1)
-
-        pybutton = QPushButton('OK', self)
-        grid.addWidget(pybutton, 6, 1)
-        pybutton.clicked.connect(self.clickMethod)
-        
-        self.setLayout(grid)
-
-        self.setGeometry(500, 500, 550, 500)
-        self.setWindowTitle('Enter Parameters For Detecting Pupil')    
-     
-    def clickMethod(self):
-        global needUpdate;
-        for field in self.editFields:
-            field.clear()
-        if self.pybutton.isEnabled():
-            EyeDetector.pupil_detector(img, pupil_detector)
-            needUpdate = True
-        else
-            needUpdate = False
-        
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    mainWin = MainWindow()
-    mainWin.show()
-    sys.exit( app.exec_() )
-
-    
-class EyeDetector:
-    def build_pupil_detector(circles):
-        circles = cv2.HoughCircles(img,cv2.HOUGH_GRADIENT,1,50,
-                                    param1=50,param2=50,minRadius=0,maxRadius=0)
-
-    def pupil_detector(img, pupil_detector):
-        img = cv2.imread("/Users/macair/Desktop/VH lab/rat eye.png")
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        cimg = img.copy()
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        img = cv2.medianBlur(img, 5)
-        pupil_detector = circles
-
-        circles = np.uint16(np.around(circles))
-        for i in circles[0,:]:
-            cv2.circle(img,(i[0],i[1]),i[2],(0,255,0),2)
-            cv2.circle(img,(i[0],i[1]),2,(0,0,255),3)
-        return img
-
-    def default_glint_parameters():
-        params = cv2.SimpleBlobDetector_Params()
-
-        params.minThreshold = 10
-        params.maxThreshold = 255
-        
-        params.image_min_threshold = 200;
-        params.image_max_threshold = 255;
-        params.image_threshold_type = cv2.THRESH_BINARY_INV;
-
-        params.filterByArea = True
-        params.minArea = 1000
-
-        params.filterByCircularity = True
-        params.minCircularity = 0.001
-
-        params.filterByConvexity = True
-        params.minConvexity = 0.001
-
-        params.filterByInertia = True
-        params.minInertiaRatio = 0.001
-        
-        return params       
-    
-    def built_glints_detector(params)
-        ver = (cv2.__version__).split('.')
-        if int(ver[0]) < 3:
-            glints_detector = cv2.SimpleBlobDetector(params)
-        else:
-            glints_detector = cv2.SimpleBlobDetector_create(params)
-        return glints_detector
-        
-    def apply_glint_detector(img, glints_detector, params):
-        retval, threshold = cv2.threshold(img, params.image_min_threshold, params.image_max_threshold, params.threshold_type);
-        keypoints = glints_detector.detect(threshold)
-        return keypoints;
-
-    def main():
-        global needUpdate;
-        use_video_capture = false;
-        EyeDetector ed;
-        needUpdate = true;
-        glint_params = ed.default_glint_parameters();
-        pupilDetector = # insert here
-        glintDetector = ed.build_glint_detector(glint_params);
-        
-        if use_video_capture:
-            cap = cv2.VideoCapture(0)
-            
-        cv2.namedWindow('image')
-        cv2.createTrackbar('threshold', 'image', 0, 255, nothing)
-
-        while True:
-            if needUpdate:
-                # re-build the detectors from the parameters
-                # reads the parameters from the window, and builds the detectors
-                # glint_params = (read from the window)
-                glintDetector = ed.build_glint_detector(glint_params);
-                
-                needUpdate = false;
-            
-            if use_video_capture:
-                _, frame = cap.read()
-            else:
-                frame = cv2.imread("/Users/macair/Desktop/VH lab/rat eye2.png", cv2.IMREAD_GRAYSCALE);
-                
-            pupil_frame = ed.pupil_detector(frame, pupil_detector)
-            keypoints = ed.apply_glint_detector(frame, glints_detector, glint_params);
-            img_with_keypoints = cv2.drawKeypoints(img, keypoints, np.array([]), (0,0,255), cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-
-            if pupil_frame is not None:
-                glints_frame = ed.glints_detector(frame, glints_detector)
-                threshold = cv2.getTrackbarPos('threshold', 'image')
-            cv2.imshow('image', pupil_frame)
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
-        cap.release()
-        cv2.destroyAllWindows()
-
-    def nothing(x):
-        pass
+cap.release()
+cv2.destroyAllWindows()
