@@ -1,0 +1,51 @@
+import numpy as np
+import cv2
+import sys
+
+class EyeCamera:
+
+    number_of_cameras;
+    imglist; # a list of the most recent image from each camera
+    timelist; % a list of the time of acquisition of the last image from each camera
+
+    def __init__(self):
+         imglist = []; % an empty list of images
+         timelist = []; % an empty list of time stamps
+    def snap_photos(self):
+    
+    
+    
+class EyeCameraOpenCVFile : EyeCamera
+
+     filename;  % the filename to open
+     cap;  % the CV2 video capture object
+     
+     def __init__(self, myfilename):
+         super().__init(self);
+         self.filename = myfilename;
+         self.cap = cv2.VideoCapture(self.filename);
+         self.number_of_cameras = 1;
+
+     def snap_photos(self):
+          if self.cap.isOpened()
+              ret, frame = cap.read()
+              self.imglist[0] = frame;
+              self.timelist[0] = 0; % this should be current time
+          
+class EyeCameraSpin : EyeCamera
+      # insert whatever new variables you need here
+         super().__init(self);
+
+     def __init__(self, myfilename):
+         super().__init(self);
+         self.filename = myfilename;
+         self.cap = cv2.VideoCapture(self.filename);
+         self.number_of_cameras = 1;
+
+     def snap_photos(self):
+          if self.cap.isOpened()
+              ret, frame = cap.read()
+              self.imglist[0] = frame;
+              self.timelist[0] = 0; % this should be current time
+      
+      
